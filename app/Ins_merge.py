@@ -20,7 +20,11 @@ print("📂 Instrument File Columns:", df_instrument.columns.tolist())
 print("📂 Position File Columns:", df_position.columns.tolist())
 
 df_merged = df_position.merge(df_instrument, left_on="InstrumentID", right_on="ISIN", how="outer")
-df_merged["Unit Price"] = df_merged["Unit_Price"] * df_merged["Quantity"]
+df_merged["Total Price"] = df_merged["Unit_Price"] * df_merged["Quantity"]
 
-print("✅ Merged Data Preview:\n", df_merged.head())
-df_merged.to_csv("/app/out/PositionReport.csv", index=False)
+df_output = df_merged[["ID_x", "ISIN","Name", "Quantity", "Total Price"]]
+df_output.columns = ["ID", "ISIN", "Name","Quantity", "Total Price"]
+
+print("✅ Merged Data Preview:\n", df_output.head())
+
+df_output.to_csv(output_file, index=False,float_format="%.0f")
